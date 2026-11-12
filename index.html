@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#060914" />
+  <title>SERO GAMES · 실시간 게임 포털</title>
+  <style>
+    :root {
+      --bg: #060914;
+      --card: rgba(17, 24, 47, 0.9);
+      --border: rgba(56, 189, 248, 0.28);
+      --cyan: #00f5d4;
+      --gold: #fbbf24;
+      --indigo: #818cf8;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: radial-gradient(circle at 50% 0%, #131c3d 0%, var(--bg) 62%);
+      color: var(--text);
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .wrap {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 24px 16px 36px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--cyan);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .refresh-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .refresh-btn:active {
+      transform: scale(0.96);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-left: 4px solid var(--accent, var(--cyan));
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card.is-online {
+      border-color: rgba(56, 189, 248, 0.34);
+      border-left-color: var(--accent, var(--cyan));
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .card-desc {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .pill.online {
+      color: var(--green);
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(74, 222, 128, 0.45);
+    }
+
+    .pill.offline {
+      color: #94a3b8;
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .url-text {
+      font-size: 12px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent, var(--cyan)), #38bdf8);
+      color: #04101c;
+      box-shadow: 0 4px 18px rgba(0, 245, 212, 0.25);
+      transition: transform 0.08s ease;
+    }
+
+    .play-btn:active {
+      transform: scale(0.96);
+    }
+
+    .play-btn.disabled {
+      pointer-events: none;
+      background: rgba(51, 65, 85, 0.55);
+      color: #64748b;
+      box-shadow: none;
+    }
+
+    .redirect-banner {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(0, 245, 212, 0.14);
+      border: 1px solid rgba(0, 245, 212, 0.45);
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">SERO LIVE PORTAL</p>
+        <h1>게임 &amp; 서버 접속 포털</h1>
+        <p class="sub">호스트가 서버를 켜면 최신 접속 링크가 자동으로 열립니다. 아래에서 원하는 게임을 눌러 바로 시작하세요.</p>
+      </div>
+      <button id="btnRefresh" type="button" class="refresh-btn">↻ 새로고침</button>
+    </header>
+
+    <div id="redirectBanner" class="redirect-banner" hidden></div>
+
+    <div class="status-bar">
+      <span id="syncState">최신 서버 주소 불러오는 중...</span>
+      <span id="updatedAtLabel">-</span>
+    </div>
+
+    <main id="cards" class="cards"></main>
+
+    <p class="footer-note">
+      이 페이지 주소를 북마크해 두시면 터널 주소가 바뀌어도 항상 최신 링크로 연결됩니다.<br />
+      바로가기 팁: <code>?go=rhythm</code> 또는 <code>?go=clockwork</code>
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      var GIST_ID = '28db55a5cd4b8e23e22b8ccf2a0d1738';
+      var GIST_OWNER = 'gooddaymedico-pixel';
+      var FILE_NAME = 'sero_links.json';
+
+      var SERVICE_ORDER = [
+        { key: 'rhythm', icon: '✦', accent: '#00f5d4', fallbackName: '오르빗 펄스 (리듬게임)', fallbackDesc: '점프 & 홀드·스킵·러시 네온 리듬게임' },
+        { key: 'clockwork', icon: '⚙', accent: '#fbbf24', fallbackName: '클락워크 코어', fallbackDesc: '스팀펑크 레일 포탑 디펜스' },
+        { key: 'novel', icon: '📖', accent: '#818cf8', fallbackName: '소설 스튜디오', fallbackDesc: '원격 소설 작업실' }
+      ];
+
+      var cardsEl = document.getElementById('cards');
+      var syncEl = document.getElementById('syncState');
+      var updatedEl = document.getElementById('updatedAtLabel');
+      var redirectBanner = document.getElementById('redirectBanner');
+      var btnRefresh = document.getElementById('btnRefresh');
+      var hasRedirected = false;
+
+      function getGoTarget() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          return (params.get('go') || '').trim().toLowerCase();
+        } catch (e) {
+          return '';
+        }
+      }
+
+      async function fetchPortalData() {
+        var ts = Date.now();
+        var apiUrl = 'https://api.github.com/gists/' + GIST_ID + '?_t=' + ts;
+        try {
+          var res = await fetch(apiUrl, { cache: 'no-store' });
+          if (res.ok) {
+            var gist = await res.json();
+            var f = gist && gist.files && gist.files[FILE_NAME];
+            if (f && f.content) {
+              return JSON.parse(f.content);
+            }
+          }
+        } catch (e) {}
+
+        var rawUrl = 'https://gist.githubusercontent.com/' + GIST_OWNER + '/' + GIST_ID + '/raw/' + FILE_NAME + '?_t=' + ts;
+        var res2 = await fetch(rawUrl, { cache: 'no-store' });
+        if (!res2.ok) throw new Error('HTTP ' + res2.status);
+        return await res2.json();
+      }
+
+      function renderCards(data) {
+        var services = (data && data.services) || {};
+        var goTarget = getGoTarget();
+
+        updatedEl.textContent = data && data.updatedAt ? ('갱신: ' + data.updatedAt) : '-';
+        cardsEl.innerHTML = '';
+
+        var onlineCount = 0;
+        SERVICE_ORDER.forEach(function (meta) {
+          var svc = services[meta.key] || {};
+          var isOnline = Boolean(svc.online && svc.url);
+          if (isOnline) onlineCount += 1;
+
+          var card = document.createElement('section');
+          card.className = 'card' + (isOnline ? ' is-online' : '');
+          card.style.setProperty('--accent', meta.accent);
+
+          var top = document.createElement('div');
+          top.className = 'card-top';
+
+          var info = document.createElement('div');
+          var title = document.createElement('h2');
+          title.className = 'card-title';
+          title.textContent = meta.icon + ' ' + (svc.name || meta.fallbackName);
+
+          var desc = document.createElement('p');
+          desc.className = 'card-desc';
+          desc.textContent = svc.desc || meta.fallbackDesc;
+
+          info.appendChild(title);
+          info.appendChild(desc);
+
+          var pill = document.createElement('span');
+          pill.className = 'pill ' + (isOnline ? 'online' : 'offline');
+          pill.textContent = isOnline ? '● 온라인' : '○ 오프라인';
+
+          top.appendChild(info);
+          top.appendChild(pill);
+
+          var bottom = document.createElement('div');
+          bottom.className = 'card-bottom';
+
+          var urlSpan = document.createElement('span');
+          urlSpan.className = 'url-text';
+          urlSpan.textContent = isOnline ? svc.url.replace(/^https?:\/\//, '') : '호스트가 서버를 켜면 자동으로 열립니다.';
+
+          var btn = document.createElement('a');
+          btn.className = 'play-btn' + (isOnline ? '' : ' disabled');
+          btn.textContent = isOnline ? '▶ 지금 플레이' : '대기 중';
+          if (isOnline) {
+            btn.href = svc.url;
+          }
+
+          bottom.appendChild(urlSpan);
+          bottom.appendChild(btn);
+
+          card.appendChild(top);
+          card.appendChild(bottom);
+          cardsEl.appendChild(card);
+
+          if (!hasRedirected && goTarget && goTarget === meta.key && isOnline) {
+            hasRedirected = true;
+            redirectBanner.hidden = false;
+            redirectBanner.textContent = (svc.name || meta.fallbackName) + ' 서버로 바로 이동합니다...';
+            setTimeout(function () {
+              window.location.href = svc.url;
+            }, 600);
+          }
+        });
+
+        syncEl.textContent = onlineCount > 0
+          ? ('실시간 동기화 완료 · 온라인 ' + onlineCount + '개')
+          : '현재 켜진 서버가 없습니다 (켜질 때까지 대기 중)';
+      }
+
+      async function loadAndRender() {
+        btnRefresh.disabled = true;
+        try {
+          var data = await fetchPortalData();
+          renderCards(data);
+        } catch (err) {
+          syncEl.textContent = '주소를 불러오지 못했습니다. 새로고침해 주세요.';
+        } finally {
+          btnRefresh.disabled = false;
+        }
+      }
+
+      btnRefresh.addEventListener('click', loadAndRender);
+      loadAndRender();
+      setInterval(function () {
+        if (!document.hidden) loadAndRender();
+      }, 20000);
+    })();
+  </script>
+</body>
+</html>
