@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gooddaymedico-pixel.github.io/sero/sitemap.xml
